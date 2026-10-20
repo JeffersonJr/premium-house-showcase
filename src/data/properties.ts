@@ -24,12 +24,19 @@ export type Property = {
   tag?: string;
   description: string;
   amenities: string[];
+  nearby: { name: string; dist: string }[];
+  features: Record<string, string[]>;
+  video: string;
+  condo: number;
+  iptu: number;
+  lat: number;
+  lng: number;
 };
 
 export const PHONE = "5511999999999";
 export const PHONE_LABEL = "(11) 99999-9999";
 
-export const properties: Property[] = [
+const base: Omit<Property, Extra>[] = [
   { id: "PH1024", title: "Casa contemporânea com piscina", type: "Casa", purpose: "Venda", neighborhood: "Alphaville", city: "Barueri", price: 4850000, area: 520, beds: 4, suites: 4, baths: 6, parking: 4, images: [hero, p4, p5, p1], featured: true, tag: "Exclusivo", description: "Projeto assinado com integração total entre áreas sociais e jardim tropical. Piscina aquecida, espaço gourmet e acabamentos de alto padrão.", amenities: ["Piscina aquecida", "Espaço gourmet", "Automação", "Energia solar", "Segurança 24h"] },
   { id: "PH1031", title: "Apartamento alto padrão com vista", type: "Apartamento", purpose: "Venda", neighborhood: "Itaim Bibi", city: "São Paulo", price: 2390000, area: 168, beds: 3, suites: 2, baths: 3, parking: 2, images: [p1, p5, p4], featured: true, tag: "Lançamento", description: "Andar alto com vista panorâmica, living amplo com caixilhos piso-teto e condomínio completo de lazer.", amenities: ["Academia", "Piscina", "Varanda gourmet", "Portaria 24h"] },
   { id: "PH1045", title: "Sobrado moderno em condomínio", type: "Casa", purpose: "Venda", neighborhood: "Granja Viana", city: "Cotia", price: 1590000, area: 290, beds: 3, suites: 3, baths: 4, parking: 3, images: [p2, p4, p5], featured: true, description: "Sobrado novo em condomínio fechado, jardim privativo e muita luz natural.", amenities: ["Condomínio fechado", "Jardim", "Churrasqueira", "Playground"] },
@@ -48,3 +55,32 @@ export function formatPrice(p: Property) {
 export function whatsappLink(msg: string) {
   return `https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
 }
+
+type Extra = "nearby" | "features" | "video" | "condo" | "iptu" | "lat" | "lng";
+
+const coords: Record<string, [number, number]> = {
+  Barueri: [-23.5022, -46.8486], "São Paulo": [-23.5868, -46.6823], Cotia: [-23.6037, -46.8919],
+  Bertioga: [-23.8065, -46.0262], "Campos do Jordão": [-22.7396, -45.5912],
+};
+
+export const properties: Property[] = base.map((p, i) => ({
+  ...p,
+  condo: p.type.startsWith("Casa") ? 1200 + i * 150 : 1800 + i * 200,
+  iptu: Math.round(p.price * (p.purpose === "Venda" ? 0.0006 : 0.05)),
+  video: "https://www.youtube.com/embed/zumJJUL_ruM",
+  lat: coords[p.city]?.[0] ?? -23.55,
+  lng: coords[p.city]?.[1] ?? -46.63,
+  nearby: [
+    { name: "Supermercado", dist: `${300 + i * 50} m` }, { name: "Escola bilíngue", dist: `${600 + i * 40} m` },
+    { name: "Parque", dist: `${800 + i * 30} m` }, { name: "Hospital", dist: `${1.2 + i * 0.2} km`.replace(".", ",") },
+    { name: "Shopping", dist: `${1.5 + i * 0.3} km`.replace(/(\.\d)\d+/, "$1").replace(".", ",") }, { name: "Academia", dist: `${200 + i * 20} m` },
+  ],
+  features: {
+    "Imóvel": ["Piso porcelanato", "Ar-condicionado", "Armários planejados", "Varanda", "Aquecimento a gás", "Closet"],
+    "Condomínio": ["Portaria 24h", "Piscina", "Academia", "Salão de festas", "Playground", "Espaço pet"],
+  },
+}));
+
+export const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+export const ADDRESS = "Av. Paulista, 1000 – Bela Vista, São Paulo/SP";
+export const HOURS = [["Seg. a sex.", "9h às 19h"], ["Sábado", "9h às 14h"], ["Domingo", "Plantão via WhatsApp"]] as const;

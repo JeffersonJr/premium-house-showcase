@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, X, Phone, MessageCircle, Mail, MapPin, Instagram, Facebook } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Linkedin, Youtube, Clock } from "lucide-react";
 import logo from "@/assets/logo.png";
-import { PHONE_LABEL, whatsappLink } from "@/data/properties";
+import { PHONE_LABEL, whatsappLink, ADDRESS, HOURS } from "@/data/properties";
 
 const nav = [
   { to: "/", label: "Início" },
@@ -44,33 +44,61 @@ export function Header() {
 }
 
 export function Footer() {
+  const col = "space-y-2.5 text-sm text-navy-foreground/70";
+  const h = "mb-4 font-sans text-sm font-bold uppercase tracking-widest text-navy-foreground";
   return (
     <footer className="mt-24 bg-navy text-navy-foreground">
-      <div className="container-x grid gap-10 py-16 md:grid-cols-4">
-        <div className="md:col-span-2">
+      <div className="border-b border-navy-foreground/10">
+        <div className="container-x flex flex-col items-center justify-between gap-5 py-10 md:flex-row">
+          <div><h3 className="text-3xl">Receba imóveis exclusivos</h3><p className="mt-1 text-sm text-navy-foreground/70">Novidades e oportunidades direto no seu e-mail.</p></div>
+          <form onSubmit={(e) => e.preventDefault()} className="flex w-full max-w-md gap-2">
+            <input type="email" required placeholder="Seu e-mail" className="h-12 flex-1 rounded-full bg-navy-foreground/10 px-5 text-sm outline-none placeholder:text-navy-foreground/50 focus:ring-2 focus:ring-primary" />
+            <button className="rounded-full bg-primary px-6 font-bold text-primary-foreground hover:brightness-110">Assinar</button>
+          </form>
+        </div>
+      </div>
+      <div className="container-x grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="lg:col-span-2">
           <div className="inline-block rounded-xl bg-card p-3"><img src={logo} alt="Premium House" width={1280} height={512} loading="lazy" className="h-12 w-auto" /></div>
-          <p className="mt-5 max-w-sm text-sm text-navy-foreground/70">Imóveis selecionados, atendimento consultivo e transparência em cada etapa da sua negociação.</p>
+          <p className="mt-5 max-w-sm text-sm text-navy-foreground/70">Imóveis selecionados, atendimento consultivo e transparência em cada etapa da sua negociação. CRECI 00000-J.</p>
           <div className="mt-5 flex gap-3">
-            <a href="#" aria-label="Instagram" className="rounded-full bg-navy-foreground/10 p-2.5 hover:bg-primary"><Instagram className="h-4 w-4" /></a>
-            <a href="#" aria-label="Facebook" className="rounded-full bg-navy-foreground/10 p-2.5 hover:bg-primary"><Facebook className="h-4 w-4" /></a>
+            {[Instagram, Facebook, Linkedin, Youtube].map((I, i) => <a key={i} href="#" aria-label="Rede social" className="rounded-full bg-navy-foreground/10 p-2.5 transition hover:bg-primary"><I className="h-4 w-4" /></a>)}
           </div>
         </div>
         <div>
-          <h4 className="mb-4 font-bold">Navegação</h4>
-          <ul className="space-y-2 text-sm text-navy-foreground/70">
-            {nav.map((n) => <li key={n.to}><Link to={n.to} className="hover:text-primary">{n.label}</Link></li>)}
+          <h4 className={h}>Imóveis</h4>
+          <ul className={col}>
+            <li><Link to="/imoveis" search={{ finalidade: "Venda" }} className="hover:text-primary">Comprar</Link></li>
+            <li><Link to="/imoveis" search={{ finalidade: "Locação" }} className="hover:text-primary">Alugar</Link></li>
+            {["Apartamento", "Casa", "Cobertura", "Casa de Campo"].map((t) => <li key={t}><Link to="/imoveis" search={{ tipo: t }} className="hover:text-primary">{t}s</Link></li>)}
           </ul>
         </div>
         <div>
-          <h4 className="mb-4 font-bold">Contato</h4>
+          <h4 className={h}>Institucional</h4>
+          <ul className={col}>
+            {nav.map((n) => <li key={n.to}><Link to={n.to} className="hover:text-primary">{n.label}</Link></li>)}
+            <li><a href="#" className="hover:text-primary">Trabalhe conosco</a></li>
+            <li><a href="#" className="hover:text-primary">Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className={h}>Contato</h4>
           <ul className="space-y-3 text-sm text-navy-foreground/70">
-            <li className="flex gap-2"><Phone className="h-4 w-4 text-primary" /> {PHONE_LABEL}</li>
-            <li className="flex gap-2"><Mail className="h-4 w-4 text-primary" /> contato@premiumhouse.com.br</li>
-            <li className="flex gap-2"><MapPin className="h-4 w-4 text-primary" /> Av. Paulista, 1000 – São Paulo/SP</li>
+            <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-primary" /> {PHONE_LABEL}</li>
+            <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-primary" /> contato@premiumhouse.com.br</li>
+            <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-primary" /> {ADDRESS}</li>
+            <li className="flex gap-2"><Clock className="h-4 w-4 shrink-0 text-primary" />
+              <div className="space-y-0.5">{HOURS.map(([d, t]) => <div key={d}><span className="font-semibold text-navy-foreground">{d}:</span> {t}</div>)}</div>
+            </li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-navy-foreground/10 py-5 text-center text-xs text-navy-foreground/50">© 2026 Premium House · Site Premium por Microsistec</div>
+      <div className="border-t border-navy-foreground/10">
+        <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-navy-foreground/50 md:flex-row">
+          <span>© 2026 Premium House Imóveis · Todos os direitos reservados</span>
+          <span>Site Premium por Microsistec</span>
+        </div>
+      </div>
     </footer>
   );
 }
