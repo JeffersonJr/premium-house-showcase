@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type MouseEvent } from "react";
 import { BedDouble, Bath, Car, Maximize, MapPin, Heart, Share2, ChevronLeft, ChevronRight } from "lucide-react";
-import { formatPrice, type Property } from "@/data/properties";
+import { type Property } from "@/data/properties";
+import { PriceBlock } from "@/components/PriceBlock";
 import { shareLink, useFavorites } from "@/lib/favorites";
 
 export function CardActions({ p, className = "" }: { p: Property; className?: string }) {
@@ -60,9 +61,9 @@ export function PropertyCard({ p }: { p: Property }) {
           <span className="flex flex-col items-center gap-1"><Bath className="h-6 w-6 text-primary" />{p.baths} ban</span>
           <span className="flex flex-col items-center gap-1"><Car className="h-6 w-6 text-primary" />{p.parking} vg</span>
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xl font-extrabold text-navy">{formatPrice(p)}</span>
-          <span className="text-sm font-bold text-primary group-hover:underline">Ver detalhes →</span>
+        <div className="mt-4 flex items-end justify-between gap-3">
+          <PriceBlock p={p} />
+          <span className="shrink-0 text-sm font-bold text-primary group-hover:underline">Ver →</span>
         </div>
       </div>
     </Link>

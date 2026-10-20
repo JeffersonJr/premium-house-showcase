@@ -64,7 +64,7 @@ const tags = [
 
 function Index() {
   const featured = properties.filter((p) => p.featured);
-  const rentals = properties.filter((p) => p.purpose === "Locação");
+  const rentals = properties.filter((p) => p.purpose !== "Venda");
   return (
     <PageShell>
       <section className="relative flex min-h-[88vh] items-center">

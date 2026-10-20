@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { BedDouble, Bath, Car, Maximize, MapPin } from "lucide-react";
-import { formatPrice, type Property } from "@/data/properties";
+import { type Property } from "@/data/properties";
+import { PriceBlock } from "@/components/PriceBlock";
 import { CardActions, PhotoSlider } from "@/components/PropertyCard";
 
 export function PropertyRow({ p }: { p: Property }) {
@@ -21,8 +22,8 @@ export function PropertyRow({ p }: { p: Property }) {
           <span className="flex items-center gap-2"><Bath className="h-6 w-6 text-primary" />{p.baths} banheiros</span>
           <span className="flex items-center gap-2"><Car className="h-6 w-6 text-primary" />{p.parking} vagas</span>
         </div>
-        <div className="mt-auto flex items-center justify-between pt-5">
-          <span className="text-2xl font-extrabold text-navy">{formatPrice(p)}</span>
+        <div className="mt-auto flex items-end justify-between gap-4 pt-5">
+          <PriceBlock p={p} />
           <span className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground">Ver detalhes</span>
         </div>
       </div>
