@@ -18,7 +18,7 @@ export function SearchBar() {
       if (hit) return navigate({ to: "/imoveis/$id", params: { id: hit.id } });
       return navigate({ to: "/imoveis", search: { q: c || undefined } });
     }
-    navigate({ to: "/imoveis", search: { finalidade: mode, tipo: type || undefined, q: q || undefined } });
+    return navigate({ to: "/imoveis", search: { finalidade: mode, tipo: type || undefined, q: q || undefined } });
   };
   const field = "h-12 w-full rounded-xl border bg-background px-4 text-sm font-medium outline-none focus:ring-2 focus:ring-ring";
   const labels: Record<Mode, string> = { Venda: "Comprar", Locação: "Alugar", Código: "Código" };
