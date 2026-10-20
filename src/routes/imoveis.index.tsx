@@ -4,7 +4,7 @@ import { LayoutGrid, List as ListIcon, SlidersHorizontal } from "lucide-react";
 import { PageShell } from "@/components/Layout";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyRow } from "@/components/PropertyRow";
-import { properties } from "@/data/properties";
+import { isRent, isSale, properties } from "@/data/properties";
 
 type S = string | undefined;
 type N = number | undefined;
@@ -41,7 +41,7 @@ function List() {
   const set = (patch: Partial<Search>) => navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });
   const q = s.q?.toLowerCase();
   let list = properties.filter((p) =>
-    (!s.finalidade || p.purpose === s.finalidade) && (!s.tipo || p.type === s.tipo) &&
+    (!s.finalidade || (s.finalidade === "Venda" ? isSale(p) : isRent(p))) && (!s.tipo || p.type === s.tipo) &&
     (!s.cidade || p.city === s.cidade) && (!s.bairro || p.neighborhood === s.bairro) &&
     (!s.quartos || p.beds >= s.quartos) && (!s.suites || p.suites >= s.suites) &&
     (!s.vagas || p.parking >= s.vagas) && (!s.banheiros || p.baths >= s.banheiros) &&
@@ -75,9 +75,9 @@ function List() {
           <p className="mt-2 text-navy-foreground/70">{list.length} imóveis encontrados</p>
         </div>
       </section>
-      <div className="container-x mt-10 grid gap-8 lg:grid-cols-[300px_1fr]">
+      <div className="container-x mt-10 grid gap-8 lg:grid-cols-[300px_1fr] lg:items-start">
         <button onClick={() => setShowFilters(!showFilters)} className="flex items-center justify-center gap-2 rounded-xl border bg-card py-3 font-bold lg:hidden"><SlidersHorizontal className="h-4 w-4" /> Filtros</button>
-        <aside className={`${showFilters ? "block" : "hidden"} h-fit space-y-4 rounded-2xl border bg-card p-5 shadow-card lg:sticky lg:top-32 lg:block`}>
+        <aside className={`${showFilters ? "block" : "hidden"} h-fit space-y-4 rounded-2xl border bg-card p-5 shadow-card lg:sticky lg:top-32 lg:block lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto`}>
           <h2 className="text-xl">Filtrar imóveis</h2>
           <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-muted p-1">
             {[["Venda", "Comprar"], ["Locação", "Alugar"]].map(([v, l]) => (
