@@ -3,15 +3,15 @@ import { PageShell } from "@/components/Layout";
 import { PropertyCard } from "@/components/PropertyCard";
 import { properties } from "@/data/properties";
 
-type Search = { finalidade?: string; tipo?: string; q?: string; quartos?: number; ordem?: string };
+type Search = { finalidade?: string | undefined; tipo?: string | undefined; q?: string | undefined; quartos?: number | undefined; ordem?: string | undefined };
 
 export const Route = createFileRoute("/imoveis/")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    finalidade: typeof s.finalidade === "string" ? s.finalidade : undefined,
-    tipo: typeof s.tipo === "string" ? s.tipo : undefined,
-    q: typeof s.q === "string" ? s.q : undefined,
-    quartos: s.quartos ? Number(s.quartos) : undefined,
-    ordem: typeof s.ordem === "string" ? s.ordem : undefined,
+    finalidade: typeof s["finalidade"] === "string" ? s["finalidade"] : undefined,
+    tipo: typeof s["tipo"] === "string" ? s["tipo"] : undefined,
+    q: typeof s["q"] === "string" ? s["q"] : undefined,
+    quartos: s["quartos"] ? Number(s["quartos"]) : undefined,
+    ordem: typeof s["ordem"] === "string" ? s["ordem"] : undefined,
   }),
   head: () => ({
     meta: [
