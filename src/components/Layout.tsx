@@ -53,15 +53,6 @@ export function Footer() {
   const h = "mb-4 font-sans text-sm font-bold uppercase tracking-widest text-navy-foreground";
   return (
     <footer className="mt-24 bg-navy text-navy-foreground">
-      <div className="border-b border-navy-foreground/10">
-        <div className="container-x flex flex-col items-center justify-between gap-5 py-10 md:flex-row">
-          <div><h3 className="text-3xl">Receba imóveis exclusivos</h3><p className="mt-1 text-sm text-navy-foreground/70">Novidades e oportunidades direto no seu e-mail.</p></div>
-          <form onSubmit={(e) => e.preventDefault()} className="flex w-full max-w-md gap-2">
-            <input type="email" required placeholder="Seu e-mail" className="h-12 flex-1 rounded-full bg-navy-foreground/10 px-5 text-sm outline-none placeholder:text-navy-foreground/50 focus:ring-2 focus:ring-primary" />
-            <button className="rounded-full bg-primary px-6 font-bold text-primary-foreground hover:brightness-110">Assinar</button>
-          </form>
-        </div>
-      </div>
       <div className="container-x grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <div className="inline-block rounded-xl bg-card p-3"><img src={logo} alt="Premium House" width={1280} height={512} loading="lazy" className="h-12 w-auto" /></div>
