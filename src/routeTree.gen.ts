@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnunciarRouteImport } from './routes/anunciar'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as EmpreendimentosRouteImport } from './routes/empreendimentos'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as SobreRouteImport } from './routes/sobre'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ImoveisIndexRouteImport } from './routes/imoveis.index'
 import { Route as ImoveisIdRouteImport } from './routes/imoveis.$id'
 
@@ -31,9 +35,29 @@ const ContatoRoute = ContatoRouteImport.update({
   path: '/contato',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmpreendimentosRoute = EmpreendimentosRouteImport.update({
+  id: '/empreendimentos',
+  path: '/empreendimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImoveisIndexRoute = ImoveisIndexRouteImport.update({
@@ -51,16 +75,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anunciar': typeof AnunciarRoute
   '/contato': typeof ContatoRoute
+  '/empreendimentos': typeof EmpreendimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/sobre': typeof SobreRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/imoveis/$id': typeof ImoveisIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/imoveis/': typeof ImoveisIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anunciar': typeof AnunciarRoute
   '/contato': typeof ContatoRoute
+  '/empreendimentos': typeof EmpreendimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/sobre': typeof SobreRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/imoveis/$id': typeof ImoveisIdRoute
+  '/blog': typeof BlogIndexRoute
   '/imoveis': typeof ImoveisIndexRoute
 }
 export interface FileRoutesById {
@@ -68,23 +100,50 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/anunciar': typeof AnunciarRoute
   '/contato': typeof ContatoRoute
+  '/empreendimentos': typeof EmpreendimentosRoute
+  '/favoritos': typeof FavoritosRoute
   '/sobre': typeof SobreRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/imoveis/$id': typeof ImoveisIdRoute
+  '/blog/': typeof BlogIndexRoute
   '/imoveis/': typeof ImoveisIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/anunciar' | '/contato' | '/sobre' | '/imoveis/$id' | '/imoveis/'
+    | '/'
+    | '/anunciar'
+    | '/contato'
+    | '/empreendimentos'
+    | '/favoritos'
+    | '/sobre'
+    | '/blog/$slug'
+    | '/imoveis/$id'
+    | '/blog/'
+    | '/imoveis/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anunciar' | '/contato' | '/sobre' | '/imoveis/$id' | '/imoveis'
+  to:
+    | '/'
+    | '/anunciar'
+    | '/contato'
+    | '/empreendimentos'
+    | '/favoritos'
+    | '/sobre'
+    | '/blog/$slug'
+    | '/imoveis/$id'
+    | '/blog'
+    | '/imoveis'
   id:
     | '__root__'
     | '/'
     | '/anunciar'
     | '/contato'
+    | '/empreendimentos'
+    | '/favoritos'
     | '/sobre'
+    | '/blog/$slug'
     | '/imoveis/$id'
+    | '/blog/'
     | '/imoveis/'
   fileRoutesById: FileRoutesById
 }
@@ -92,8 +151,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnunciarRoute: typeof AnunciarRoute
   ContatoRoute: typeof ContatoRoute
+  EmpreendimentosRoute: typeof EmpreendimentosRoute
+  FavoritosRoute: typeof FavoritosRoute
   SobreRoute: typeof SobreRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   ImoveisIdRoute: typeof ImoveisIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ImoveisIndexRoute: typeof ImoveisIndexRoute
 }
 
@@ -120,11 +183,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContatoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/empreendimentos': {
+      id: '/empreendimentos'
+      path: '/empreendimentos'
+      fullPath: '/empreendimentos'
+      preLoaderRoute: typeof EmpreendimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sobre': {
       id: '/sobre'
       path: '/sobre'
       fullPath: '/sobre'
       preLoaderRoute: typeof SobreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/imoveis/': {
@@ -148,8 +239,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnunciarRoute: AnunciarRoute,
   ContatoRoute: ContatoRoute,
+  EmpreendimentosRoute: EmpreendimentosRoute,
+  FavoritosRoute: FavoritosRoute,
   SobreRoute: SobreRoute,
+  BlogSlugRoute: BlogSlugRoute,
   ImoveisIdRoute: ImoveisIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ImoveisIndexRoute: ImoveisIndexRoute,
 }
 export const routeTree = rootRouteImport

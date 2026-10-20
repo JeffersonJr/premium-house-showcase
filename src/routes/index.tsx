@@ -1,18 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShieldCheck, KeyRound, Handshake, TrendingUp, Building2, Home, Trees, Waves, Star, Search, CalendarCheck, FileSignature, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ShieldCheck, KeyRound, Handshake, TrendingUp, Building2, Home, Trees, Waves, Star, Search, CalendarCheck, FileSignature, ChevronLeft, ChevronRight, Quote, Warehouse, BedSingle, Briefcase, LandPlot } from "lucide-react";
 import hero from "@/assets/hero.jpg";
 import banner1 from "@/assets/banner1.jpg";
 import banner2 from "@/assets/banner2.jpg";
 import p1 from "@/assets/p1.jpg";
 import p3 from "@/assets/p3.jpg";
-import p4 from "@/assets/p4.jpg";
 import p6 from "@/assets/p6.jpg";
 import { PageShell } from "@/components/Layout";
 import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { LeadForm } from "@/components/LeadForm";
 import { properties } from "@/data/properties";
+import { posts } from "@/data/posts";
+import { PostCard } from "@/components/PostCard";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +37,10 @@ const cats = [
   { label: "Casas", tipo: "Casa", icon: Home },
   { label: "Coberturas", tipo: "Cobertura", icon: Waves },
   { label: "Casas de Campo", tipo: "Casa de Campo", icon: Trees },
+  { label: "Sobrados", tipo: "Casa", icon: Warehouse },
+  { label: "Studios", tipo: "Apartamento", icon: BedSingle },
+  { label: "Salas Comerciais", tipo: "Sala Comercial", icon: Briefcase },
+  { label: "Terrenos", tipo: "Terreno", icon: LandPlot },
 ];
 
 const banners = [
@@ -73,14 +78,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="container-x relative z-10 -mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-        {cats.map((c) => (
-          <Link key={c.tipo} to="/imoveis" search={{ tipo: c.tipo }} className="group flex items-center gap-4 rounded-2xl border bg-card p-5 shadow-card transition hover:border-primary">
-            <span className="rounded-xl bg-accent p-3 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground"><c.icon className="h-6 w-6" /></span>
-            <span className="font-bold">{c.label}</span>
-          </Link>
-        ))}
-      </section>
+      <CategoryCarousel />
 
       <SectionHead kicker="Destaques" title="Imóveis em destaque" link={{ label: "Ver todos à venda", search: { finalidade: "Venda" } }} />
       <div className="container-x mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
@@ -172,18 +170,9 @@ function Index() {
         </div>
       </section>
 
-      <SectionHead kicker="Blog" title="Dicas e mercado imobiliário" />
+      <SectionHead kicker="Blog" title="Dicas e mercado imobiliário" link={{ label: "Ver todos os artigos", to: "/blog" }} />
       <div className="container-x mt-10 grid gap-7 md:grid-cols-3">
-        {[
-          [p4, "Guia", "Como financiar seu primeiro imóvel em 2026"],
-          [p3, "Mercado", "Litoral norte: a valorização dos imóveis frente mar"],
-          [p1, "Decoração", "5 ideias para valorizar seu apartamento antes de vender"],
-        ].map(([img, c, t]) => (
-          <article key={t} className="group overflow-hidden rounded-2xl border bg-card shadow-card">
-            <div className="aspect-[16/10] overflow-hidden"><img src={img} alt={t} width={1024} height={768} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div>
-            <div className="p-6"><span className="text-xs font-bold uppercase tracking-widest text-primary">{c}</span><h3 className="mt-2 text-xl">{t}</h3><span className="mt-3 inline-block text-sm font-bold text-navy">Ler artigo →</span></div>
-          </article>
-        ))}
+        {posts.slice(0, 3).map((p) => <PostCard key={p.slug} post={p} />)}
       </div>
 
       <section className="container-x mt-24">
@@ -214,11 +203,11 @@ function Index() {
   );
 }
 
-function SectionHead({ kicker, title, link }: { kicker: string; title: string; link?: { label: string; search: Record<string, string> } }) {
+function SectionHead({ kicker, title, link }: { kicker: string; title: string; link?: { label: string; search?: Record<string, string>; to?: "/blog" } }) {
   return (
     <div className="container-x mt-24 flex flex-wrap items-end justify-between gap-4">
       <div><p className="text-sm font-bold uppercase tracking-widest text-primary">{kicker}</p><h2 className="mt-2 text-4xl md:text-5xl">{title}</h2></div>
-      {link && <Link to="/imoveis" search={link.search} className="rounded-full border-2 border-navy px-6 py-2.5 text-sm font-bold text-navy transition hover:bg-navy hover:text-navy-foreground">{link.label}</Link>}
+      {link && <Link to={link.to ?? "/imoveis"} search={link.search ?? {}} className="rounded-full border-2 border-navy px-6 py-2.5 text-sm font-bold text-navy transition hover:bg-navy hover:text-navy-foreground">{link.label}</Link>}
     </div>
   );
 }
@@ -243,6 +232,38 @@ function BannerCarousel() {
           <button aria-label="Anterior" onClick={() => setI((i - 1 + banners.length) % banners.length)} className="rounded-full bg-card/90 p-2 text-navy"><ChevronLeft className="h-5 w-5" /></button>
           <button aria-label="Próximo" onClick={() => setI((i + 1) % banners.length)} className="rounded-full bg-card/90 p-2 text-navy"><ChevronRight className="h-5 w-5" /></button>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function CategoryCarousel() {
+  const [i, setI] = useState(0);
+  const [per, setPer] = useState(4);
+  useEffect(() => {
+    const f = () => setPer(window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : 2);
+    f(); window.addEventListener("resize", f); return () => window.removeEventListener("resize", f);
+  }, []);
+  const max = cats.length - per;
+  const idx = Math.min(i, max);
+  const arrow = "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border bg-card text-navy shadow-card transition hover:bg-primary hover:text-primary-foreground disabled:opacity-40";
+  return (
+    <section className="container-x relative z-10 -mt-10">
+      <div className="relative px-2">
+        <button aria-label="Anterior" disabled={idx === 0} onClick={() => setI(Math.max(0, idx - 1))} className={`${arrow} -left-3`}><ChevronLeft className="h-5 w-5" /></button>
+        <div className="overflow-hidden py-2">
+          <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${(idx * 100) / per}%)` }}>
+            {cats.map((c) => (
+              <div key={c.label} className="shrink-0 px-2" style={{ width: `${100 / per}%` }}>
+                <Link to="/imoveis" search={{ tipo: c.tipo }} className="group flex items-center gap-4 rounded-2xl border bg-card p-5 shadow-card transition hover:border-primary">
+                  <span className="shrink-0 rounded-xl bg-accent p-3 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground"><c.icon className="h-6 w-6" /></span>
+                  <span className="min-w-0 truncate font-bold">{c.label}</span>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        <button aria-label="Próximo" disabled={idx >= max} onClick={() => setI(Math.min(max, idx + 1))} className={`${arrow} -right-3`}><ChevronRight className="h-5 w-5" /></button>
       </div>
     </section>
   );

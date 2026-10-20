@@ -84,3 +84,5 @@ export const properties: Property[] = base.map((p, i) => ({
 export const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 export const ADDRESS = "Av. Paulista, 1000 – Bela Vista, São Paulo/SP";
 export const HOURS = [["Seg. a sex.", "9h às 19h"], ["Sábado", "9h às 14h"], ["Domingo", "Plantão via WhatsApp"]] as const;
+export const PHONE_RENT = "5511988888888";
+export const PHONE_RENT_LABEL = "(11) 98888-8888";

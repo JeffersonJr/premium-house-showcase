@@ -4,6 +4,8 @@ import { BedDouble, Bath, Car, Maximize, MapPin, Check, Sparkles, Share2, Heart,
 import { PageShell } from "@/components/Layout";
 import { PropertyCard } from "@/components/PropertyCard";
 import { LeadForm } from "@/components/LeadForm";
+import { ShareButtons } from "@/components/ShareButtons";
+import { shareLink, useFavorites } from "@/lib/favorites";
 import { brl, formatPrice, properties } from "@/data/properties";
 
 export const Route = createFileRoute("/imoveis/$id")({
@@ -47,10 +49,7 @@ function Detail() {
       <div className="container-x pt-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground"><Link to="/" className="hover:text-primary">Início</Link> / <Link to="/imoveis" className="hover:text-primary">Imóveis</Link> / {p.type} / Cód. {p.id}</p>
-          <div className="flex gap-2">
-            <button className="flex items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-semibold hover:border-primary"><Heart className="h-4 w-4" />Favoritar</button>
-            <button className="flex items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-semibold hover:border-primary"><Share2 className="h-4 w-4" />Compartilhar</button>
-          </div>
+          <DetailActions id={p.id} title={p.title} />
         </div>
         <div className="mt-5 grid gap-3 md:grid-cols-[2fr_1fr]">
           <div className="relative">
@@ -77,6 +76,7 @@ function Detail() {
               </div>
               <h1 className="mt-4 text-4xl md:text-5xl">{p.title}</h1>
               <p className="mt-3 flex items-center gap-1 text-muted-foreground"><MapPin className="h-4 w-4 text-primary" />{p.neighborhood}, {p.city}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-3"><span className="text-sm font-bold">Compartilhar:</span><ShareButtons title={p.title} path={`/imoveis/${p.id}`} /></div>
               <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
                 {specs.map((s) => (
                   <div key={s.l} className="rounded-xl border bg-card p-4 text-center">
@@ -158,5 +158,18 @@ function Detail() {
         )}
       </div>
     </PageShell>
+  );
+}
+
+function DetailActions({ id, title }: { id: string; title: string }) {
+  const { has, toggle } = useFavorites();
+  const fav = has(id);
+  return (
+    <div className="flex items-center gap-3">
+      <button onClick={() => toggle(id)} className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-bold transition ${fav ? "border-destructive bg-destructive/10 text-destructive" : "bg-card hover:border-primary"}`}>
+        <Heart className={`h-5 w-5 ${fav ? "fill-current" : ""}`} />{fav ? "Favoritado" : "Favoritar"}
+      </button>
+      <button onClick={() => shareLink(title, `/imoveis/${id}`)} className="flex items-center gap-2 rounded-full border bg-card px-5 py-2.5 text-sm font-bold hover:border-primary"><Share2 className="h-5 w-5" />Compartilhar</button>
+    </div>
   );
 }

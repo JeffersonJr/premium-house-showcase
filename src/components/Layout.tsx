@@ -1,13 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, X, Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Linkedin, Youtube, Clock } from "lucide-react";
+import { Menu, X, Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Linkedin, Youtube, Clock, Heart } from "lucide-react";
 import logo from "@/assets/logo.png";
-import { PHONE_LABEL, whatsappLink, ADDRESS, HOURS } from "@/data/properties";
+import { PHONE_LABEL, PHONE_RENT_LABEL, whatsappLink, ADDRESS, HOURS } from "@/data/properties";
 
 const nav = [
   { to: "/", label: "Início" },
   { to: "/imoveis", label: "Imóveis" },
-  { to: "/anunciar", label: "Anuncie seu imóvel" },
+  { to: "/empreendimentos", label: "Empreendimentos" },
+  { to: "/blog", label: "Blog" },
+  { to: "/anunciar", label: "Anuncie" },
   { to: "/sobre", label: "Sobre" },
   { to: "/contato", label: "Contato" },
 ] as const;
@@ -19,23 +21,26 @@ export function Header() {
       <div className="hidden bg-navy text-navy-foreground text-xs md:block">
         <div className="container-x flex h-9 items-center justify-between">
           <span>CRECI 00000-J · Atendimento de seg. a sáb.</span>
-          <span className="flex items-center gap-2"><Phone className="h-3.5 w-3.5" /> {PHONE_LABEL}</span>
+          <span className="flex items-center gap-5"><span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5 text-primary" /> <strong>Vendas:</strong> {PHONE_LABEL}</span><span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5 text-primary" /> <strong>Locação:</strong> {PHONE_RENT_LABEL}</span></span>
         </div>
       </div>
       <div className="container-x flex h-20 items-center justify-between">
         <Link to="/"><img src={logo} alt="Premium House" width={1280} height={512} className="h-14 w-auto" /></Link>
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-6 xl:flex">
           {nav.map((n) => (
             <Link key={n.to} to={n.to} className="text-sm font-semibold text-foreground/80 transition-colors hover:text-primary" activeProps={{ className: "text-primary" }} activeOptions={{ exact: n.to === "/" }}>{n.label}</Link>
           ))}
         </nav>
-        <a href={whatsappLink("Olá! Gostaria de falar com um corretor da Premium House.")} target="_blank" rel="noreferrer" className="hidden items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-card transition hover:brightness-110 lg:inline-flex">
+        <div className="flex items-center gap-3">
+        <Link to="/favoritos" aria-label="Favoritos" className="rounded-full border p-2.5 text-navy transition hover:border-primary hover:text-primary" activeProps={{ className: "border-primary text-primary" }}><Heart className="h-5 w-5" /></Link>
+        <a href={whatsappLink("Olá! Gostaria de falar com um corretor da Premium House.")} target="_blank" rel="noreferrer" className="hidden items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-card transition hover:brightness-110 sm:inline-flex">
           <MessageCircle className="h-4 w-4" /> Fale com um corretor
         </a>
-        <button className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X /> : <Menu />}</button>
+        <button className="xl:hidden" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X /> : <Menu />}</button>
+        </div>
       </div>
       {open && (
-        <nav className="container-x flex flex-col gap-3 pb-5 lg:hidden">
+        <nav className="container-x flex flex-col gap-3 pb-5 xl:hidden">
           {nav.map((n) => <Link key={n.to} to={n.to} onClick={() => setOpen(false)} className="py-1 font-semibold">{n.label}</Link>)}
         </nav>
       )}
@@ -84,7 +89,8 @@ export function Footer() {
         <div>
           <h4 className={h}>Contato</h4>
           <ul className="space-y-3 text-sm text-navy-foreground/70">
-            <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-primary" /> {PHONE_LABEL}</li>
+            <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-primary" /> Vendas: {PHONE_LABEL}</li>
+            <li className="flex gap-2"><Phone className="h-4 w-4 shrink-0 text-primary" /> Locação: {PHONE_RENT_LABEL}</li>
             <li className="flex gap-2"><Mail className="h-4 w-4 shrink-0 text-primary" /> contato@premiumhouse.com.br</li>
             <li className="flex gap-2"><MapPin className="h-4 w-4 shrink-0 text-primary" /> {ADDRESS}</li>
             <li className="flex gap-2"><Clock className="h-4 w-4 shrink-0 text-primary" />
